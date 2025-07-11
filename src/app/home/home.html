@@ -1,0 +1,48 @@
+<div class="container">
+  <h2>Usuarios</h2>
+
+  <form #forumForm="ngForm" (ngSubmit)="onSubmit(user)" class="user-form">
+    <div class="form-group">
+      <label for="nombre">Nombre:</label>
+      <input type="text" name="nombre" [(ngModel)]="user.name" required placeholder="Ingrese el nombre" />
+    </div>
+    <div class="form-group">
+      <label for="direccion">Dirección:</label>
+      <input type="text" name="direccion" [(ngModel)]="user.address" required placeholder="Ingrese la dirección" />
+    </div>
+    <div class="form-group">
+      <label for="telefono">Teléfono:</label>
+      <input type="text" name="telefono" [(ngModel)]="user.phone" required placeholder="Ingrese el teléfono" />
+    </div>
+    <button type="submit" class="btn">{{ user.id ? 'Actualizar' : 'Guardar' }}</button>
+  </form>
+
+  <br />
+
+  @if (users.length > 0) {
+    <table class="tabla">
+      <thead>
+        <tr>
+          <th>#</th>
+          <th>Nombre</th>
+          <th>Dirección</th>
+          <th>Teléfono</th>
+          <th>Editar</th>
+          <th>Eliminar</th>
+        </tr>
+      </thead>
+      <tbody>
+        @for (user of users; track user.id) {
+          <tr>
+            <td>{{ user.id }}</td>
+            <td>{{ user.name }}</td>
+            <td>{{ user.address }}</td>
+            <td>{{ user.phone }}</td>
+            <td><button class="btn edit" (click)="editUser(user)">Editar</button></td>
+            <td><button class="btn delete" (click)="deleteUser(user.id)">Eliminar</button></td>
+          </tr>
+        }
+      </tbody>
+    </table>
+  }
+</div>

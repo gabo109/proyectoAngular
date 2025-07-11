@@ -1,0 +1,31 @@
+.custom-navbar {
+  max-width: 900px;
+  margin: 20px auto;
+  padding: 12px 20px;
+  background-color: #007bff;
+  border-radius: 12px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  display: flex;
+  gap: 20px;
+  font-family: 'Segoe UI', sans-serif;
+}
+
+.custom-navbar a {
+  color: white;
+  text-decoration: none;
+  font-weight: 500;
+  font-size: 16px;
+  padding: 6px 12px;
+  border-radius: 6px;
+  transition: background-color 0.3s ease, transform 0.2s ease;
+}
+
+.custom-navbar a:hover {
+  background-color: #0056b3;
+  transform: scale(1.05);
+}
+
+.custom-navbar a.active {
+  background-color: #ffc107;
+  color: #212529;
+}
