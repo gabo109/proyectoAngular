@@ -1,48 +1,63 @@
 <div class="container">
-  <h2>Usuarios</h2>
+    <h2 style="font-size: 1.5rem;align-items: center;justify-content: center;">👤</h2>
+    <h2>Usuarios</h2>
 
-  <form #forumForm="ngForm" (ngSubmit)="onSubmit(user)" class="user-form">
-    <div class="form-group">
-      <label for="nombre">Nombre:</label>
-      <input type="text" name="nombre" [(ngModel)]="user.name" required placeholder="Ingrese el nombre" />
-    </div>
-    <div class="form-group">
-      <label for="direccion">Dirección:</label>
-      <input type="text" name="direccion" [(ngModel)]="user.address" required placeholder="Ingrese la dirección" />
-    </div>
-    <div class="form-group">
-      <label for="telefono">Teléfono:</label>
-      <input type="text" name="telefono" [(ngModel)]="user.phone" required placeholder="Ingrese el teléfono" />
-    </div>
-    <button type="submit" class="btn">{{ user.id ? 'Actualizar' : 'Guardar' }}</button>
-  </form>
+    <form #userForm="ngForm" (ngSubmit)="onSubmit(user, userForm)" class="user-form">
+        <div class="form-group">
+            <label for="nombre">Nombre:</label>
+            <input type="text" name="nombre" [(ngModel)]="user.name" required placeholder="Ingrese el nombre"
+                #nombre="ngModel" pattern="^[A-Za-zÁÉÍÓÚáéíóúÑñ\s]+$"/>
+            <div *ngIf="nombre.invalid && (nombre.touched || userForm.submitted)" class="error">
+                El nombre es obligatorio. Debe contener solo letras y espacios.
+            </div>
+        </div>
+        <div class="form-group">
+            <label for="direccion">Dirección:</label>
+            <input type="text" name="direccion" [(ngModel)]="user.address" placeholder="Ingrese la dirección"
+                required #direccion="ngModel"/>
+            <div *ngIf="direccion.invalid && (direccion.touched || userForm.submitted)" class="error">
+                La dirección es obligatoria.
+            </div>
+        </div>
+        <div class="form-group">
+            <label for="telefono">Teléfono:</label>
+            <input type="text" name="telefono" [(ngModel)]="user.phone" placeholder="Ingrese el teléfono" required 
+            pattern="^0\d{9}$" maxlength="10" #telefono="ngModel"/>
+            <div *ngIf="telefono.invalid && (telefono.touched || userForm.submitted)" class="error">
+                El teléfono es obligatorio y debe tener 10 dígitos(empezando con 0).
+            </div>
+        </div>
+        <button type="submit" class="btn">
+            {{ user.id ? 'Actualizar' : 'Guardar' }}
+        </button>
+    </form>
 
-  <br />
+    <br />
 
-  @if (users.length > 0) {
+    @if (users.length > 0) {
     <table class="tabla">
-      <thead>
-        <tr>
-          <th>#</th>
-          <th>Nombre</th>
-          <th>Dirección</th>
-          <th>Teléfono</th>
-          <th>Editar</th>
-          <th>Eliminar</th>
-        </tr>
-      </thead>
-      <tbody>
-        @for (user of users; track user.id) {
-          <tr>
-            <td>{{ user.id }}</td>
-            <td>{{ user.name }}</td>
-            <td>{{ user.address }}</td>
-            <td>{{ user.phone }}</td>
-            <td><button class="btn edit" (click)="editUser(user)">Editar</button></td>
-            <td><button class="btn delete" (click)="deleteUser(user.id)">Eliminar</button></td>
-          </tr>
-        }
-      </tbody>
+        <thead>
+            <tr>
+                <th>#</th>
+                <th>Nombre</th>
+                <th>Dirección</th>
+                <th>Teléfono</th>
+                <th>Editar</th>
+                <th>Eliminar</th>
+            </tr>
+        </thead>
+        <tbody>
+            @for (user of users; track user.id) {
+            <tr>
+                <td>{{ user.id }}</td>
+                <td>{{ user.name }}</td>
+                <td>{{ user.address }}</td>
+                <td>{{ user.phone }}</td>
+                <td><button class="btn edit" (click)="editUser(user)">Editar</button></td>
+                <td><button class="btn delete" (click)="confirmDelete(user.id)">Eliminar</button></td>
+            </tr>
+            }
+        </tbody>
     </table>
-  }
+    }
 </div>

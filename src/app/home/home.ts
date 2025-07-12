@@ -1,6 +1,6 @@
 import { CommonModule } from '@angular/common';
 import { Component, OnInit } from '@angular/core';
-import { FormsModule } from '@angular/forms';
+import { FormsModule, NgForm } from '@angular/forms';
 import { UserService } from '../user.service';
 import { user } from '../app';
 
@@ -28,27 +28,30 @@ export class Home implements OnInit {
     });
   }
 
-onSubmit(user: user) {
-  if (user.id && user.id !== 0) {
-    // Modo edición
-    this.userService.updateUser(user).subscribe(updatedUser => {
-      const index = this.users.findIndex(u => u.id === updatedUser.id);
-      if (index !== -1) {
-        this.users[index] = updatedUser;
-      }
-      this.resetForm();
-    });
-  } else {
-    // Modo agregar
-    // Elimina el ID antes de enviarlo al backend
-    const { id, ...userWithoutId } = user;
+  onSubmit(user: user, form: NgForm) {
+    if (form.invalid) {
+      return; // no continúa si el formulario es inválido
+    }
+    if (user.id && user.id !== 0) {
+      // Modo edición
+      this.userService.updateUser(user).subscribe(updatedUser => {
+        const index = this.users.findIndex(u => u.id === updatedUser.id);
+        if (index !== -1) {
+          this.users[index] = updatedUser;
+        }
+        this.resetForm(form);
+      });
+    } else {
+      // Modo agregar
+      // Elimina el ID antes de enviarlo al backend
+      const { id, ...userWithoutId } = user;
 
-    this.userService.addUser(userWithoutId as user).subscribe(newUser => {
-      this.users.push(newUser);
-      this.resetForm();
-    });
+      this.userService.addUser(userWithoutId as user).subscribe(newUser => {
+        this.users.push(newUser);
+        this.resetForm(form);
+      });
+    }
   }
-}
 
 
   editUser(selectedUser: user) {
@@ -62,13 +65,23 @@ onSubmit(user: user) {
     });
   }
 
-  resetForm() {
+  resetForm(form?: NgForm) {
     this.user = {
       id: 0,
       name: '',
       address: '',
       phone: ''
     };
+    if (form) {
+      form.resetForm(); // <-- aquí se reinicia el estado del formulario
+    }
+  }
+
+  confirmDelete(userId: number): void {
+    const confirmado = window.confirm('¿Está seguro de que desea eliminar este usuario?');
+    if (confirmado) {
+      this.deleteUser(userId);
+    }
   }
 
 }
